@@ -140,6 +140,8 @@
             this.dataGridViewTemp = new System.Windows.Forms.DataGridView();
             this.labelUsername = new System.Windows.Forms.Label();
             this.labelRole = new System.Windows.Forms.Label();
+            this.buttonApplyChanges = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewDirectories)).BeginInit();
@@ -180,6 +182,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.buttonApplyChanges);
             this.tabPage1.Controls.Add(this.buttonAddDictionary);
             this.tabPage1.Controls.Add(this.dataGridViewDirectories);
             this.tabPage1.Controls.Add(this.tabControlDirectories);
@@ -220,7 +223,7 @@
             this.tabControlDirectories.Location = new System.Drawing.Point(0, 0);
             this.tabControlDirectories.Name = "tabControlDirectories";
             this.tabControlDirectories.SelectedIndex = 0;
-            this.tabControlDirectories.Size = new System.Drawing.Size(529, 595);
+            this.tabControlDirectories.Size = new System.Drawing.Size(529, 566);
             this.tabControlDirectories.TabIndex = 0;
             this.tabControlDirectories.SelectedIndexChanged += new System.EventHandler(this.tabControlDirectories_SelectedIndexChanged);
             // 
@@ -233,7 +236,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(521, 569);
+            this.tabPage3.Size = new System.Drawing.Size(521, 540);
             this.tabPage3.TabIndex = 0;
             this.tabPage3.Text = "Должности";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -520,6 +523,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.button1);
             this.tabPage2.Controls.Add(this.buttonAddData);
             this.tabPage2.Controls.Add(this.dataGridViewMainData);
             this.tabPage2.Controls.Add(this.tabControlData);
@@ -558,7 +562,7 @@
             this.tabControlData.Location = new System.Drawing.Point(0, 0);
             this.tabControlData.Name = "tabControlData";
             this.tabControlData.SelectedIndex = 0;
-            this.tabControlData.Size = new System.Drawing.Size(529, 595);
+            this.tabControlData.Size = new System.Drawing.Size(529, 566);
             this.tabControlData.TabIndex = 1;
             this.tabControlData.SelectedIndexChanged += new System.EventHandler(this.tabControlData_SelectedIndexChanged);
             // 
@@ -572,7 +576,7 @@
             this.tabPage9.Controls.Add(this.textBoxEqDirectoryName);
             this.tabPage9.Location = new System.Drawing.Point(4, 22);
             this.tabPage9.Name = "tabPage9";
-            this.tabPage9.Size = new System.Drawing.Size(521, 569);
+            this.tabPage9.Size = new System.Drawing.Size(521, 540);
             this.tabPage9.TabIndex = 0;
             this.tabPage9.Text = "Справочники оборудования";
             this.tabPage9.UseVisualStyleBackColor = true;
@@ -1219,6 +1223,25 @@
             this.labelRole.TabIndex = 3;
             this.labelRole.Text = "$Role";
             // 
+            // buttonApplyChanges
+            // 
+            this.buttonApplyChanges.Location = new System.Drawing.Point(4, 572);
+            this.buttonApplyChanges.Name = "buttonApplyChanges";
+            this.buttonApplyChanges.Size = new System.Drawing.Size(521, 23);
+            this.buttonApplyChanges.TabIndex = 3;
+            this.buttonApplyChanges.Text = "Применить изменения";
+            this.buttonApplyChanges.UseVisualStyleBackColor = true;
+            this.buttonApplyChanges.Click += new System.EventHandler(this.buttonApplyChanges_Click);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(4, 572);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(521, 23);
+            this.button1.TabIndex = 4;
+            this.button1.Text = "Применить изменения";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
             // App
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1385,6 +1408,8 @@
         private System.Windows.Forms.Label label37;
         private System.Windows.Forms.Label labelUsername;
         private System.Windows.Forms.Label labelRole;
+        private System.Windows.Forms.Button buttonApplyChanges;
+        private System.Windows.Forms.Button button1;
     }
 }
 

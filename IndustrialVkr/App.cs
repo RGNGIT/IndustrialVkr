@@ -334,5 +334,16 @@ namespace IndustrialVkr
 
             UpdateAttachmentGrid();
         }
+
+        private void buttonApplyChanges_Click(object sender, EventArgs e)
+        {
+            using (DatabaseConnection connection = new DatabaseConnection())
+            {
+                for (int i = 0; i < dataGridViewDirectories.Rows.Count - 1; i++)
+                {
+                    connection.UpdateJobTitle(dataGridViewDirectories.Rows[i].Cells[1].Value.ToString(), dataGridViewDirectories.Rows[i].Cells[2].Value.ToString(), int.Parse(dataGridViewDirectories.Rows[i].Cells[0].Value.ToString()));
+                }
+            }
+        }
     }
 }

@@ -137,5 +137,13 @@ namespace IndustrialVkr
 
             command.ExecuteNonQuery();
         }
+
+        public void UpdateJobTitle(string name, string shortName, int id) 
+        {
+            string query = $"UPDATE job_title SET name = '{name}', shortName = '{shortName}' WHERE id = {id};";
+            MySqlCommand command = new MySqlCommand(query, _connection);
+
+            command.ExecuteNonQuery();
+        }
     }
 }
