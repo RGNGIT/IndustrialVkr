@@ -116,14 +116,23 @@ namespace IndustrialVkr
 
         public void AddRejection(string rejectionDate, string resumeDate, int rejectionId, int directoryId, int equipmentId, int attachmentId) 
         {
-            string query = $"INSERT INTO equipment_rejection (dateOfRejection, dateOfResume, rejection_reason_id, equipment_dictionary_id, equipment_id, equipment_attach_id) VALUES ('{rejectionDate}', '{resumeDate}', '{rejectionId}', '{directoryId}', '{equipmentId}'. '{attachmentId}');";
+            string query = $"INSERT INTO equipment_rejection (dateOfRejection, dateOfResume, rejection_reason_id, equipment_dictionary_id, equipment_id, equipment_attach_id) VALUES ('{rejectionDate}', '{resumeDate}', '{rejectionId}', '{directoryId}', '{equipmentId}', '{attachmentId}');";
             MySqlCommand command = new MySqlCommand(query, _connection);
 
             command.ExecuteNonQuery();
         }
+
         public void AddAttachment(string dateOfAttachment, string dateOfDettachment, int zoneId, int employeeRoleId, int equipmentId)
         {
             string query = $"INSERT INTO equipment_attach (dateOfAttachment, zone_id, employee_role_id, equipment_id) VALUES ('{dateOfAttachment}', '{zoneId}', '{employeeRoleId}', '{equipmentId}');";
+            MySqlCommand command = new MySqlCommand(query, _connection);
+
+            command.ExecuteNonQuery();
+        }
+
+        public void DetachAttachment(int id, string dateOfDettachment) 
+        {
+            string query = $"UPDATE equipment_attach SET dateOfDettachment = '{dateOfDettachment}' WHERE id = {id};";
             MySqlCommand command = new MySqlCommand(query, _connection);
 
             command.ExecuteNonQuery();

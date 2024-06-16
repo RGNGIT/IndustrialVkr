@@ -12,13 +12,25 @@ namespace IndustrialVkr
 {
     public partial class App : Form
     {
-        public App()
+        public App(string username, string role)
         {
             InitializeComponent();
             UpdateDirectoryGrid();
             UpdateDataGrid();
             UpdateAttachmentGrid();
             FillCombo();
+
+            labelUsername.Text = username;
+            labelRole.Text = role;
+
+            if (role == "Сотрудник")
+              tabControl1.TabPages.RemoveAt(3);
+
+            if (role == "Руководитель") 
+            {
+                buttonAddDictionary.Enabled = false;
+                buttonAddData.Enabled = false;
+            }
         }
 
         private void FillCombo() 
@@ -148,6 +160,9 @@ namespace IndustrialVkr
                     case 2:
                         dataGridViewMainData.DataSource = connection.SelectScript("SELECT a.id as Ключ, a.number as 'Номер', b.name as 'Справочник оборудования', c.name as 'Модель оборудования' FROM equipment a, equipment_dictionary b, equipment_model c WHERE a.equipment_dictionary_id = b.id AND a.equipment_model_id = c.id;");
                         break;
+                    case 3:
+                        dataGridViewMainData.DataSource = connection.SelectScript("SELECT a.id as Ключ, c.name as 'Наименование', b.number as 'Номер', a.dateOfRejection as 'Дата отказа', a.dateOfResume as 'Дата возобновления' FROM equipment_rejection a, equipment b, equipment_dictionary c WHERE a.equipment_id = b.id AND a.equipment_dictionary_id = c.id;");
+                        break;
                 }
             }
         }
@@ -254,6 +269,14 @@ namespace IndustrialVkr
 
                         UpdateAttachmentGrid();
                         break;
+                    case 3:
+                        comboBoxAnalyzisZone.Items.Clear();
+                        dataGridViewTemp.DataSource = connection.SelectScript("SELECT id, name FROM zone;");
+                        for (int i = 0; i < dataGridViewTemp.Rows.Count - 1; i++)
+                        {
+                            comboBoxAnalyzisZone.Items.Add($"{dataGridViewTemp.Rows[i].Cells[0].Value} {dataGridViewTemp.Rows[i].Cells[1].Value}");
+                        }
+                        break;
                 }
             }
         }
@@ -261,9 +284,53 @@ namespace IndustrialVkr
         private void buttonAttach_Click(object sender, EventArgs e)
         {
             using (DatabaseConnection connection = new DatabaseConnection())
-            {
                 connection.AddAttachment(dateTimePickerAttachmentDateOfAttach.Value.ToString("yyyy-MM-dd"), "NULL", int.Parse(comboBoxAttachmentZone.Text.Split(' ')[0]), int.Parse(comboBoxAttachmentRole.Text.Split(' ')[0]), int.Parse(comboBoxAttachmentEquipment.Text.Split(' ')[0]));
+
+            UpdateAttachmentGrid();
+        }
+
+        private void buttonAnalyzisShow_Click(object sender, EventArgs e)
+        {
+            using (DatabaseConnection connection = new DatabaseConnection())
+                dataGridViewAnalyzis.DataSource = connection.SelectScript($"SELECT eq.number as 'Номер', ed.name as 'Название', em.name as 'Модель', COUNT(er.id) AS 'Количество отказов', SUM(DATEDIFF(er.dateOfResume, er.dateOfRejection)) AS 'Количество простоя' FROM equipment eq, equipment_dictionary ed, equipment_model em, equipment_rejection er, equipment_attach ea WHERE ea.equipment_id = eq.id AND ea.zone_id = {comboBoxAnalyzisZone.Text.Split(' ')[0]} AND ea.dateOfDettachment IS NULL AND er.equipment_id = eq.id AND eq.equipment_model_id = em.id AND eq.equipment_dictionary_id = ed.id AND (er.dateOfRejection BETWEEN '{dateTimePickerAnalyzisFrom.Value.ToString("yyyy-MM-dd")}' AND '{dateTimePickerAnalyzisTo.Value.ToString("yyyy-MM-dd")}') GROUP BY eq.number, ed.name, em.name;");
+        }
+
+        private List<Equipment> FormList() 
+        {
+            List<Equipment> equipmentList = new List<Equipment>();
+            for (int i = 0; i < dataGridViewAnalyzis.Rows.Count - 1; i++)
+            {
+                equipmentList.Add(new Equipment() { Failures = double.Parse(dataGridViewAnalyzis.Rows[i].Cells[3].Value.ToString()), Downtime = double.Parse(dataGridViewAnalyzis.Rows[i].Cells[4].Value.ToString()) });
             }
+
+            return equipmentList;
+        }
+
+        private void buttonAnalyze_Click(object sender, EventArgs e)
+        {
+            dataGridViewAnalyzisResult.Rows.Clear();
+
+            List<Equipment> equipmentList = FormList();
+            AdditiveCriterionAnalyzis analyzis = new AdditiveCriterionAnalyzis();
+
+            equipmentList = analyzis.Calculate(equipmentList);
+            for (int i = 0; i < dataGridViewAnalyzis.Rows.Count - 1; i++) 
+            {
+                dataGridViewAnalyzisResult.Rows.Add(
+                    dataGridViewAnalyzis.Rows[i].Cells[0].Value, 
+                    dataGridViewAnalyzis.Rows[i].Cells[1].Value,
+                    dataGridViewAnalyzis.Rows[i].Cells[2].Value,
+                    dataGridViewAnalyzis.Rows[i].Cells[3].Value,
+                    dataGridViewAnalyzis.Rows[i].Cells[4].Value,
+                    equipmentList[i].AdditiveCriterion
+                    );
+            }
+        }
+
+        private void buttonAttachmentDetach_Click(object sender, EventArgs e)
+        {
+            using (DatabaseConnection connection = new DatabaseConnection())
+                connection.DetachAttachment(int.Parse(dataGridViewAttachment.SelectedRows[0].Cells[0].Value.ToString()), dateTimePickerAttachmentDetach.Value.ToString("yyyy-MM-dd"));
 
             UpdateAttachmentGrid();
         }
