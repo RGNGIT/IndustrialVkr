@@ -33,7 +33,7 @@ namespace IndustrialVkr
             {
                 equipment.NormalizedFailureCount = Normalize(equipment.FailureCount, maxFailureCount);
                 equipment.NormalizedDowntimeDays = Normalize(equipment.DowntimeDays, maxDowntimeDays);
-                equipment.AdditiveCriterion = equipment.NormalizedFailureCount + equipment.NormalizedDowntimeDays;
+                equipment.AdditiveCriterion = Math.Round(equipment.NormalizedFailureCount + equipment.NormalizedDowntimeDays, 1);
             }
         }
 
