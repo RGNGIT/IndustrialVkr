@@ -300,7 +300,7 @@ namespace IndustrialVkr
             List<Equipment> equipmentList = new List<Equipment>();
             for (int i = 0; i < dataGridViewAnalyzis.Rows.Count - 1; i++)
             {
-                equipmentList.Add(new Equipment() { Failures = double.Parse(dataGridViewAnalyzis.Rows[i].Cells[3].Value.ToString()), Downtime = double.Parse(dataGridViewAnalyzis.Rows[i].Cells[4].Value.ToString()) });
+                equipmentList.Add(new Equipment() { FailureCount = int.Parse(dataGridViewAnalyzis.Rows[i].Cells[3].Value.ToString()), DowntimeDays = int.Parse(dataGridViewAnalyzis.Rows[i].Cells[4].Value.ToString()) });
             }
 
             return equipmentList;

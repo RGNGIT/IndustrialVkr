@@ -8,8 +8,10 @@ namespace IndustrialVkr
 {
     public class Equipment
     {
-        public double Failures { get; set; }
-        public double Downtime { get; set; }
+        public int FailureCount { get; set; }
+        public int DowntimeDays { get; set; }
+        public double NormalizedFailureCount { get; set; }
+        public double NormalizedDowntimeDays { get; set; }
         public double AdditiveCriterion { get; set; }
     }
 
@@ -17,30 +19,31 @@ namespace IndustrialVkr
     {
         public List<Equipment> Calculate(List<Equipment> equipmentList)
         {
-            double[] failures = equipmentList.Select(e => e.Failures).ToArray();
-            double[] downtimes = equipmentList.Select(e => e.Downtime).ToArray();
-
-            double[] normalizedFailures = Normalize(failures);
-            double[] normalizedDowntimes = Normalize(downtimes);
-
-            double failureWeight = 0.7;
-            double downtimeWeight = 0.3;
-
-            for (int i = 0; i < equipmentList.Count; i++)
-            {
-                equipmentList[i].AdditiveCriterion =
-                    normalizedFailures[i] * failureWeight +
-                    normalizedDowntimes[i] * downtimeWeight;
-            }
+            NormalizeAndCalculateCriteria(equipmentList);
 
             return equipmentList;
         }
 
-        private static double[] Normalize(double[] values)
+        static void NormalizeAndCalculateCriteria(List<Equipment> equipmentList)
         {
-            double min = values.Min();
-            double max = values.Max();
-            return values.Select(v => (v - min) / (max - min)).ToArray();
+            int maxFailureCount = equipmentList.Max(e => e.FailureCount);
+            int maxDowntimeDays = equipmentList.Max(e => e.DowntimeDays);
+
+            foreach (var equipment in equipmentList)
+            {
+                equipment.NormalizedFailureCount = Normalize(equipment.FailureCount, maxFailureCount);
+                equipment.NormalizedDowntimeDays = Normalize(equipment.DowntimeDays, maxDowntimeDays);
+                equipment.AdditiveCriterion = equipment.NormalizedFailureCount + equipment.NormalizedDowntimeDays;
+            }
+        }
+
+        static double Normalize(int value, int maxValue)
+        {
+            if (maxValue == 0)
+            {
+                return 0;
+            }
+            return (double)value / maxValue;
         }
     }
 }
